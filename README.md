@@ -8,6 +8,7 @@ Sniffes for DNS queries going through your attacker host and provides fake answe
 This simple PoC allows to insert DNS type A records on a Windows Domain DNS server via LDAP by means of a Domain User (without additional privileges) using Python. 
 * The original idea can be read here: https://blog.netspi.com/exploiting-adidns/
 
+*Note: This is just a PoC, so don't use it in production systems or do it under your risk.*
 
 ### Basic Usage:
 **1. Adding a new DNS node (type A record)**
