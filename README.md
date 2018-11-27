@@ -4,11 +4,13 @@ This is just a place where I put simple scripts and notes to access them quickly
 ## SimpleHTTPServer.go
 This is what you may need when doing a pentest and Python is not there to help you!
 As GO builds a portable file for many architectures, it is our saviour :)
-
+```
 Test it:
-```  $ go run SimpleHTTPServer.go 8080 ./ ```
+    $ go run SimpleHTTPServer.go 8080 ./
+
 Build it:
-```  $ env GOOS=linux GOARCH=arm GOARM=7 go build SimpleHTTPServer.go ```
+    $ env GOOS=linux GOARCH=arm GOARM=7 go build SimpleHTTPServer.go
+```
 
 ## SDPT (Simple DNS Poisoner Tool) 
 Sniffes for DNS queries going through your attacker host and provides fake answers to the specified DNS type A queries. It also forwards other queries different than type A and those pointing to FQDN that are not specifically included within the fake list.
